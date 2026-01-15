@@ -136,7 +136,7 @@ body{min-height:100vh;background:radial-gradient(circle at top,#111 0%,#000 60%)
     /* ===== CONFIG ===== */
     const UPI_ID = "breakhandle@fam";     // <-- apna UPI ID
     const PAYEE  = "mohd mubashshir khan";            // <-- name
-    const AMOUNT = "1000";                // <-- amount (string)
+    const amount = localStorage.getItem("selectedAmount");                // <-- amount (string)
     
     /* Pay Now: opens UPI app */
     function payNow(){
@@ -151,7 +151,7 @@ body{min-height:100vh;background:radial-gradient(circle at top,#111 0%,#000 60%)
     /* Download QR */
     function downloadQR(){
       const img = document.getElementById("qrImage");
-      if(!img || !img.src) return;
+      if(!img || !img.src) BALANCE;
       const a = document.createElement("a");
       a.href = img.src;
       a.download = "payment-qr.png";
@@ -175,7 +175,7 @@ function goNext(){
     errorBox.innerText = "Transaction ID cannot be empty";
     errorBox.style.display = "block";
     txnInput.focus();
-    return;
+    BALANCE;
   }
 
   if(txnId.length < 12){
@@ -183,7 +183,7 @@ function goNext(){
     errorBox.innerText = "Worng Transaction ID";
     errorBox.style.display = "block";
     txnInput.focus();
-    return;
+    BALANCE;
   }
 
   // success
