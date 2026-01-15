@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Payment</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial, Helvetica, sans-serif;}
+body{min-height:100vh;background:radial-gradient(circle at top,#111 0%,#000 60%);color:#fff}
+
+/* HEADER */
+.header{
+  position:sticky;top:0;background:rgba(0,0,0,.85);backdrop-filter:blur(10px);
+  padding:12px 16px;display:flex;align-items:center;gap:12px;
+  box-shadow:0 5px 20px rgba(0,0,0,.8);z-index:10
+}
+.logo-img{width:38px;height:38px;border-radius:50%;background:#00ffc8}
+.logo-text{font-size:16px;font-weight:700;color:#00ffc8;letter-spacing:1px}
+
+/* MAIN */
+.main{max-width:420px;margin:auto;padding:30px 18px}
+
+/* QR BOX */
+.qr-box{
+  background:linear-gradient(160deg,#0a0a0a,#151515);border-radius:28px;
+  padding:30px;text-align:center;
+  box-shadow:0 15px 30px rgba(0,0,0,.9), inset 0 0 25px rgba(255,255,255,.04);
+  margin-bottom:22px
+}
+.qr-placeholder{
+  width:180px;height:180px;margin:auto;border-radius:20px;
+  background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;overflow:hidden
+}
+.qr-placeholder img{width:100%;height:100%;object-fit:cover}
+.qr-text{margin-top:14px;font-size:13px;color:#aaa}
+.qr-sub{margin-top:6px;font-size:11px;color:#666}
+
+/* BUTTONS */
+.btn{
+  width:100%;padding:14px;border-radius:18px;border:none;cursor:pointer;
+  font-size:14px;font-weight:700;transition:.3s
+}
+.pay-btn{
+  background:linear-gradient(90deg,#00ffc8,#00cfa3);color:#000;margin-top:14px
+}
+.pay-btn:hover{transform:scale(1.03);box-shadow:0 0 25px rgba(0,255,200,.4)}
+.download-btn{
+  margin-top:10px;padding:10px 18px;border-radius:14px;
+  border:1px solid rgba(0,255,200,.3);background:transparent;color:#00ffc8;font-size:13px
+}
+.download-btn:hover{background:rgba(0,255,200,.12);box-shadow:0 0 15px rgba(0,255,200,.3)}
+
+/* INPUT */
+.input-box{margin:22px 0}
+.input-box label{font-size:13px;color:#00ffc8;display:block;margin-bottom:8px}
+.input-box input{
+  width:100%;padding:14px 16px;border-radius:16px;border:none;outline:none;
+  background:#0f0f0f;color:#fff;box-shadow:inset 0 0 10px rgba(255,255,255,.05)
+}
+
+/* FOOTER */
+.footer{padding:30px 18px 50px;max-width:420px;margin:auto;color:#777;text-align:center;font-size:11px}
+.footer span{color:#00ffc8}
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<div class="header">
+    
+    <div class="logo-img">
+        <img src="images.png" alt="Logo" style="width:100%;height:100%;border-radius:50%;">
+      </div>
+      
+  <div class="logo-text">CCdump•X</div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- QR + PAY -->
+  <div class="qr-box">
+    <div class="qr-placeholder">
+      <!-- optional QR image -->
+      <img id="qrImage" src="qr.png" alt="QR Code">
+    </div>
+
+    <div class="qr-text">
+      Scan or tap Pay Now
+      
+    </div>
+
+    <!-- PAY NOW (UPI DEEP LINK) -->
+    <button class="btn pay-btn" onclick="payNow()">Pay Now</button>
+
+    <!-- OPTIONAL DOWNLOAD QR -->
+    <button class="download-btn" onclick="downloadQR()">Download QR</button>
+  </div>
+
+  <!-- TRANSACTION ID -->
+  <div class="input-box">
+    <label>Transaction ID</label>
+    <input type="text" placeholder="Enter transaction ID">
+  </div>
+
+  <!-- NEXT -->
+  <button class="btn pay-btn" onclick="goNext()">Next</button>
+
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  © 2020 <span>CCdump•X</span><br>
+  Secure & encrypted payment flow
+</div>
+
+<script>
+    /* ===== CONFIG ===== */
+    const UPI_ID = "breakhandle@fam";     // <-- apna UPI ID
+    const PAYEE  = "mohd mubashshir khan";            // <-- name
+    const AMOUNT = "1000";                // <-- amount (string)
+    
+    /* Pay Now: opens UPI app */
+    function payNow(){
+      const link =
+        "upi://pay?pa=" + encodeURIComponent(UPI_ID) +
+        "&pn=" + encodeURIComponent(PAYEE) +
+        "&am=" + encodeURIComponent(AMOUNT) +
+        "&cu=INR";
+      window.location.href = link;
+    }
+    
+    /* Download QR */
+    function downloadQR(){
+      const img = document.getElementById("qrImage");
+      if(!img || !img.src) return;
+      const a = document.createElement("a");
+      a.href = img.src;
+      a.download = "payment-qr.png";
+      a.click();
+    }
+    
+    /* NEXT BUTTON VALIDATION */
+    function goNext(){
+      const txnInput = document.querySelector(".input-box input");
+      const txnId = txnInput.value.trim();
+    
+      if(txnId === ""){
+        alert("Transaction ID cannot be empty!");
+        txnInput.focus();
+        return;
+      }
+    
+      if(txnId.length < 12){
+        alert("Transaction ID Not Correct");
+        txnInput.focus();
+        return;
+      }
+    
+      // all good → go to next page
+      window.location.href = "n3.html";
+    }
+    </script>
+    
+
+</body>
+</html>
