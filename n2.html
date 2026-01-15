@@ -62,6 +62,20 @@ body{min-height:100vh;background:radial-gradient(circle at top,#111 0%,#000 60%)
 /* FOOTER */
 .footer{padding:30px 18px 50px;max-width:420px;margin:auto;color:#777;text-align:center;font-size:11px}
 .footer span{color:#00ffc8}
+
+/* ERROR STATE */
+.input-box input.error{
+  border:1px solid #ff3b3b;
+  box-shadow:0 0 8px rgba(255,59,59,.6);
+}
+
+.error-text{
+  margin-top:8px;
+  font-size:12px;
+  color:#ff3b3b;
+  display:none;
+}
+
 </style>
 </head>
 
@@ -103,6 +117,8 @@ body{min-height:100vh;background:radial-gradient(circle at top,#111 0%,#000 60%)
   <div class="input-box">
     <label>Transaction ID</label>
     <input type="text" placeholder="Enter transaction ID">
+    <div class="error-text" id="txnError"></div>
+
   </div>
 
   <!-- NEXT -->
@@ -143,25 +159,38 @@ body{min-height:100vh;background:radial-gradient(circle at top,#111 0%,#000 60%)
     }
     
     /* NEXT BUTTON VALIDATION */
-    function goNext(){
-      const txnInput = document.querySelector(".input-box input");
-      const txnId = txnInput.value.trim();
     
-      if(txnId === ""){
-        alert("Transaction ID cannot be empty!");
-        txnInput.focus();
-        return;
-      }
-    
-      if(txnId.length < 12){
-        alert("Transaction ID Not Correct");
-        txnInput.focus();
-        return;
-      }
-    
-      // all good → go to next page
-      window.location.href = "n3.html";
-    }
+function goNext(){
+  const txnInput = document.querySelector(".input-box input");
+  const errorBox = document.getElementById("txnError");
+  const txnId = txnInput.value.trim();
+
+  // reset
+  txnInput.classList.remove("error");
+  errorBox.style.display = "none";
+  errorBox.innerText = "";
+
+  if(txnId === ""){
+    txnInput.classList.add("error");
+    errorBox.innerText = "Transaction ID cannot be empty";
+    errorBox.style.display = "block";
+    txnInput.focus();
+    return;
+  }
+
+  if(txnId.length < 12){
+    txnInput.classList.add("error");
+    errorBox.innerText = "Worng Transaction ID";
+    errorBox.style.display = "block";
+    txnInput.focus();
+    return;
+  }
+
+  // success
+  window.location.href = "n3.html";
+}
+
+
     </script>
     
 
