@@ -122,7 +122,7 @@ body{min-height:100vh;background:radial-gradient(circle at top,#111 0%,#000 60%)
   </div>
 
   <!-- NEXT -->
-  <button class="btn pay-btn" onclick="goNext()">Next</button>
+  <button id="nextBtn" class="btn pay-btn" onclick="goNext()" disabled>Next</button>
 
 </div>
 
@@ -130,71 +130,77 @@ body{min-height:100vh;background:radial-gradient(circle at top,#111 0%,#000 60%)
 <div class="footer">
   © 2020 <span>CCdump•X</span><br>
   Secure & encrypted payment flow
-</div>
-  <script>
-    /* ===== CONFIG ===== */
-    const UPI_ID = "breakhandle@fam";     // <-- apna UPI ID
-    const PAYEE  = "mohd mubashshir khan";            // <-- name
-    const amount = localStorage.getItem("selectedAmount");                // <-- amount (string)
-    
-    /* Pay Now: opens UPI app */
-    function payNow(){
-      const link =
-        "upi://pay?pa=" + encodeURIComponent(UPI_ID) +
-        "&pn=" + encodeURIComponent(PAYEE) +
-        "&am=" + encodeURIComponent(AMOUNT) +
-        "&cu=INR";
-      window.location.href = link;
-    }
-    
-    /* Download QR */
-    function downloadQR(){
-      const img = document.getElementById("qrImage");
-      if(!img || !img.src) BALANCE;
-      const a = document.createElement("a");
-      a.href = img.src;
-      a.download = "payment-qr.png";
-      a.click();
-    }
-    
-    /* NEXT BUTTON VALIDATION */
-    
+</div><script>
+const UPI_ID = "breakhandle@fam";
+const PAYEE  = "mohd mubashshir khan";
+const amount = localStorage.getItem("selectedAmount") || "50";
+
+let paid = false;
+const nextBtn = document.getElementById("nextBtn");
+nextBtn.style.opacity = "0.4";
+
+/* PAY NOW */
+function payNow(){
+  const link =
+    "upi://pay?pa=" + encodeURIComponent(UPI_ID) +
+    "&pn=" + encodeURIComponent(PAYEE) +
+    "&am=" + encodeURIComponent(amount) +
+    "&cu=INR";
+
+  paid = true;
+  nextBtn.disabled = false;
+  nextBtn.style.opacity = "1";
+
+  window.location.href = link;
+}
+
+/* DOWNLOAD QR */
+function downloadQR(){
+  const img = document.getElementById("qrImage");
+  if(!img || !img.src) return;
+
+  const a = document.createElement("a");
+  a.href = img.src;
+  a.download = "payment-qr.png";
+  a.click();
+}
+
+/* NEXT */
 function goNext(){
+  if(!paid){
+    alert("Pehle Pay Now click karo");
+    return;
+  }
+
   const txnInput = document.querySelector(".input-box input");
   const errorBox = document.getElementById("txnError");
   const txnId = txnInput.value.trim();
 
-  // reset
   txnInput.classList.remove("error");
   errorBox.style.display = "none";
-  errorBox.innerText = "";
 
   if(txnId === ""){
     txnInput.classList.add("error");
     errorBox.innerText = "Transaction ID cannot be empty";
     errorBox.style.display = "block";
-    txnInput.focus();
-    BALANCE;
+    return;
   }
 
   if(txnId.length < 12){
     txnInput.classList.add("error");
-    errorBox.innerText = "Worng Transaction ID";
+    errorBox.innerText = "Wrong Transaction ID";
     errorBox.style.display = "block";
-    txnInput.focus();
-    BALANCE;
+    return;
   }
 
-  // success
   window.location.href = "n3.html";
 }
-
-
-    </script>
+  </script>
     
 
-</body>
+
   
 </body>
 </html>
+
 
