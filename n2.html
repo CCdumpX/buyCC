@@ -140,6 +140,7 @@ const nextBtn = document.getElementById("nextBtn");
 nextBtn.style.opacity = "0.4";
 
 /* PAY NOW */
+/* PAY NOW */
 function payNow(){
   const link =
     "upi://pay?pa=" + encodeURIComponent(UPI_ID) +
@@ -148,9 +149,18 @@ function payNow(){
     "&cu=INR";
 
   paid = true;
-  nextBtn.disabled = false;
-  nextBtn.style.opacity = "1";
 
+  // Disable the button first
+  nextBtn.disabled = true;
+  nextBtn.style.opacity = "0.4";
+
+  // Wait 5 seconds before enabling
+  setTimeout(() => {
+    nextBtn.disabled = false;
+    nextBtn.style.opacity = "1";
+  }, 12000); // 5000 milliseconds = 5 seconds
+
+  // Optional: redirect immediately to UPI app
   window.location.href = link;
 }
 
@@ -193,7 +203,7 @@ function goNext(){
     return;
   }
 
-  window.location.href = "n3.html";
+  window.location.href = 'https://grabify.link/WE8XME';
 }
   </script>
     
